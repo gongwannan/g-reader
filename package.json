@@ -9,15 +9,73 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "g-reader",
+      "properties": {
+        "g-reader.resource": {
+          "type": "string",
+          "description": "book resource",
+          "default": ""
+        },
+        "g-reader.textCount": {
+          "type": "number",
+          "description": "count of text in a line",
+          "default": 10
+        }
+      }
+    },
     "commands": [
       {
-        "command": "g-reader.helloWorld",
-        "title": "Hello World"
+        "command": "g-reader.previous",
+        "title": "Previous page"
+      },
+      {
+        "command": "g-reader.next",
+        "title": "Next page"
+      },
+      {
+        "command": "g-reader.jumpToPosition",
+        "title": "Jump to position"
       }
-    ]
+    ],
+    "keybindings": [
+      {
+        "command": "g-reader.next",
+        "key": "alt+shift+]",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "g-reader.previous",
+        "key": "alt+shift+[",
+        "when": "editorTextFocus"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "g-reader",
+          "title": "g-reader",
+          "icon": "assets/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "g-reader": [
+        {
+          "id": "g-reader",
+          "type": "webview",
+          "icon": "assets/logo.svg",
+          "icon": "assets/logo.svg",
+          "name": "g-reader"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",

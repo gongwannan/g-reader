@@ -1,51 +1,56 @@
 # g-reader README
 
-This is the README for your extension "g-reader". After writing up a brief description, we recommend including the following sections.
+A simple VS Code extension that displays text content in the status bar for easy reading while coding.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Display text files content directly in VS Code status bar
+- Switch between different text files using the sidebar view
+- Automatically saves your reading position for each file
+- Clean and intuitive user interface
+- Jump to specific position in the current book
+- Previous and next page navigation
+- Keyboard shortcuts for navigation
+- Automatically activates when VS Code starts
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![Demo](assets/demo.gif)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code version 1.103.0 or higher
+- Text files in .txt format
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `g-reader.resource`: Path to the folder containing your text files
+* `g-reader.textCount`: Number of characters to display in the status bar (default: 10)
+
+## How to Use
+
+1. Set the `g-reader.resource` setting to point to a folder containing your .txt files
+2. The extension automatically activates when VS Code starts
+3. Open the g-reader sidebar view from the activity bar
+4. Select a text file from the list
+5. Use the "Previous page" or "Next page" commands, keyboard shortcuts, or click the status bar item to navigate through the text
+6. Use the "Jump to position" command to go to a specific position in the current book
+
+## Keyboard Shortcuts
+
+- Next page: `Ctrl+Shift+Alt+Numpad0`
+- Previous page: `Ctrl+Shift+Alt+Numpad1`
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Only supports .txt files
+- No search or navigation within files
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial release with basic reading functionality
 
 ---
 
