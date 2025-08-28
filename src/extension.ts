@@ -12,6 +12,10 @@ interface BookFile {
 	pathUrl: string;
 }
 
+// Timer for auto-scrolling
+let autoScrollTimer: NodeJS.Timeout | null = null;
+let autoScrollInterval = 500; // Default 0.5s
+
 export function activate(context: vscode.ExtensionContext) {
 	// Read configuration
 	const config = vscode.workspace.getConfiguration('g-reader');
@@ -37,10 +41,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// Set content
 	statusBarItem.text = 'g-reader text area';
 	statusBarItem.tooltip = 'This is g-reader';
-	statusBarItem.color = '#FFFFFF';
 
 	// Click command
-	statusBarItem.command = 'g-reader.next';
+	statusBarItem.command = 'g-reader.toggleAutoScroll';
 
 	// Show status bar item
 	statusBarItem.show();
@@ -130,6 +133,88 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
+	// Register start auto-scroll command
+	context.subscriptions.push(
+		vscode.commands.registerCommand('g-reader.startAutoScroll', () => {
+			// Clear existing timer if any
+			if (autoScrollTimer) {
+				clearInterval(autoScrollTimer);
+			}
+			autoScrollInterval = context.globalState.get('autoScrollInterval', 500);
+
+			// Start new timer
+			autoScrollTimer = setInterval(() => {
+				try {
+					const bookMemory: BookMemory = JSON.parse(context.globalState.get<string>('bookMemory') || '{}');
+					const currentBook = context.globalState.get<string>('currentBook');
+					if (!currentBook) {
+						// Stop timer if no book is selected
+						if (autoScrollTimer) {
+							clearInterval(autoScrollTimer);
+							autoScrollTimer = null;
+						}
+						return;
+					}
+					
+					bookMemory[currentBook] = bookMemory[currentBook] ? bookMemory[currentBook] + textCount : textCount;
+					context.globalState.update('bookMemory', JSON.stringify(bookMemory));
+					updateStatusBar(context, statusBarItem, bookResource, textCount);
+				} catch (error) {
+					vscode.window.showErrorMessage(`自动滚动时出错: ${error}`);
+					// Stop timer on error
+					if (autoScrollTimer) {
+						clearInterval(autoScrollTimer);
+						autoScrollTimer = null;
+					}
+				}
+			}, autoScrollInterval);
+
+			vscode.window.showInformationMessage(`已开始自动滚动，间隔 ${autoScrollInterval}ms`);
+		})
+	);
+
+	// Register toggle auto-scroll command
+	context.subscriptions.push(
+		vscode.commands.registerCommand('g-reader.toggleAutoScroll', () => {
+			if (autoScrollTimer) {
+				clearInterval(autoScrollTimer);
+				autoScrollTimer = null;
+				vscode.window.showInformationMessage('已停止自动滚动');
+			} else {
+				vscode.commands.executeCommand('g-reader.startAutoScroll');
+				vscode.window.showInformationMessage('已开始自动滚动');
+			}
+		})
+	);
+
+	// Register command to increase auto-scroll interval
+	context.subscriptions.push(
+		vscode.commands.registerCommand('g-reader.increaseScrollInterval', () => {
+			autoScrollInterval += 100;
+			context.globalState.update('autoScrollInterval', autoScrollInterval);
+			vscode.window.showInformationMessage(`自动滚动间隔已增加至 ${autoScrollInterval}ms`);
+			
+			// If timer is running, restart it with new interval
+			if (autoScrollTimer) {
+				vscode.commands.executeCommand('g-reader.startAutoScroll');
+			}
+		})
+	);
+
+	// Register command to decrease auto-scroll interval
+	context.subscriptions.push(
+		vscode.commands.registerCommand('g-reader.decreaseScrollInterval', () => {
+			autoScrollInterval = Math.max(100, autoScrollInterval - 100);
+			context.globalState.update('autoScrollInterval', autoScrollInterval);
+			vscode.window.showInformationMessage(`自动滚动间隔已减少至 ${autoScrollInterval}ms`);
+			
+			// If timer is running, restart it with new interval
+			if (autoScrollTimer) {
+				vscode.commands.executeCommand('g-reader.startAutoScroll');
+			}
+		})
+	);
+
 	// Register WebviewViewProvider
 	const provider = new GReadProvider(context, statusBarItem, bookResource);
 	context.subscriptions.push(
@@ -144,7 +229,12 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // Must export deactivate function
-export function deactivate() { }
+export function deactivate() { 
+	// Clear timer when extension is deactivated
+	if (autoScrollTimer) {
+		clearInterval(autoScrollTimer);
+	}
+}
 
 // Define WebviewViewProvider
 class GReadProvider implements vscode.WebviewViewProvider {
@@ -199,6 +289,13 @@ class GReadProvider implements vscode.WebviewViewProvider {
 				case 'choose':
 					this.chooseFile(message.value);
 					break;
+			}
+		});
+		
+		// Handle view visibility changes
+		webviewView.onDidChangeVisibility(() => {
+			if (webviewView.visible) {
+				this.updateList();
 			}
 		});
 	}

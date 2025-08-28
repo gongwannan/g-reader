@@ -33,25 +33,41 @@
     "commands": [
       {
         "command": "g-reader.previous",
-        "title": "Previous page"
+        "title": "g-reader:Previous page"
       },
       {
         "command": "g-reader.next",
-        "title": "Next page"
+        "title": "g-reader:Next page"
       },
       {
         "command": "g-reader.jumpToPosition",
-        "title": "Jump to position"
+        "title": "g-reader:Jump to position"
+      },
+      {
+        "command": "g-reader.toggleAutoScroll",
+        "title": "g-reader:toggle auto scroll"
+      },
+      {
+        "command": "g-reader.startAutoScroll",
+        "title": "g-reader:start auto scroll"
+      },
+      {
+        "command": "g-reader.increaseScrollInterval",
+        "title": "g-reader:Increase scroll interval"
+      },
+      {
+        "command": "g-reader.decreaseScrollInterval",
+        "title": "g-reader:Decrease scroll interval"
       }
     ],
     "keybindings": [
       {
-        "command": "g-reader.next",
+        "command": "g-reader.increaseScrollInterval",
         "key": "alt+shift+]",
         "when": "editorTextFocus"
       },
       {
-        "command": "g-reader.previous",
+        "command": "g-reader.decreaseScrollInterval",
         "key": "alt+shift+[",
         "when": "editorTextFocus"
       }
@@ -70,7 +86,6 @@
         {
           "id": "g-reader",
           "type": "webview",
-          "icon": "assets/logo.svg",
           "icon": "assets/logo.svg",
           "name": "g-reader"
         }

@@ -13,8 +13,6 @@ A simple VS Code extension that displays text content in the status bar for easy
 - Keyboard shortcuts for navigation
 - Automatically activates when VS Code starts
 
-![Demo](assets/demo.gif)
-
 ## Requirements
 
 - VS Code version 1.103.0 or higher
@@ -24,8 +22,8 @@ A simple VS Code extension that displays text content in the status bar for easy
 
 This extension contributes the following settings:
 
-* `g-reader.resource`: Path to the folder containing your text files
-* `g-reader.textCount`: Number of characters to display in the status bar (default: 10)
+- `g-reader.resource`: Path to the folder containing your text files
+- `g-reader.textCount`: Number of characters to display in the status bar (default: 10)
 
 ## How to Use
 
@@ -38,8 +36,8 @@ This extension contributes the following settings:
 
 ## Keyboard Shortcuts
 
-- Next page: `Ctrl+Shift+Alt+Numpad0`
-- Previous page: `Ctrl+Shift+Alt+Numpad1`
+- Next page: `Alt+Shift+]`
+- Previous page: `Alt+Shift+[`
 
 ## Known Issues
 
@@ -58,19 +56,19 @@ Initial release with basic reading functionality
 
 Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+- [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
 
 ## Working with Markdown
 
 You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
+- Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
+- Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
 
 ## For more information
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
+- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**
