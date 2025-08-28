@@ -330,13 +330,6 @@ class GReadProvider implements vscode.WebviewViewProvider {
 	private async chooseFile(bookName: string) {
 		try {
 			await this.context.globalState.update('currentBook', bookName);
-			// Reset position when switching books
-			const bookMemory: BookMemory = JSON.parse(this.context.globalState.get<string>('bookMemory') || '{}');
-			if (bookMemory[bookName]) {
-				delete bookMemory[bookName];
-				await this.context.globalState.update('bookMemory', JSON.stringify(bookMemory));
-			}
-
 			updateStatusBar(this.context, this.statusBarItem, this.bookResource,
 				vscode.workspace.getConfiguration('g-reader').get<number>('textCount') as number);
 			this.updateList();
