@@ -7,6 +7,12 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.querySelector("#refresh").addEventListener("click", () => {
+  vscode.postMessage({
+    type: "refresh"
+  });
+});
+
 window.addEventListener("message", (event) => {
   const message = event.data;
   

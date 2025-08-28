@@ -61,7 +61,7 @@ export function activate(context: vscode.ExtensionContext) {
 					vscode.window.showInformationMessage('请先选择一本书籍');
 					return;
 				}
-				
+
 				const currentPosition = bookMemory[currentBook] || 0;
 				// Move back by textCount, but not below 0
 				bookMemory[currentBook] = Math.max(0, currentPosition - textCount);
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
 					vscode.window.showInformationMessage('请先选择一本书籍');
 					return;
 				}
-				
+
 				bookMemory[currentBook] = bookMemory[currentBook] ? bookMemory[currentBook] + textCount : textCount;
 				context.globalState.update('bookMemory', JSON.stringify(bookMemory));
 				updateStatusBar(context, statusBarItem, bookResource, textCount);
@@ -155,7 +155,7 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 						return;
 					}
-					
+
 					bookMemory[currentBook] = bookMemory[currentBook] ? bookMemory[currentBook] + textCount : textCount;
 					context.globalState.update('bookMemory', JSON.stringify(bookMemory));
 					updateStatusBar(context, statusBarItem, bookResource, textCount);
@@ -193,7 +193,7 @@ export function activate(context: vscode.ExtensionContext) {
 			autoScrollInterval += 100;
 			context.globalState.update('autoScrollInterval', autoScrollInterval);
 			vscode.window.showInformationMessage(`自动滚动间隔已增加至 ${autoScrollInterval}ms`);
-			
+
 			// If timer is running, restart it with new interval
 			if (autoScrollTimer) {
 				vscode.commands.executeCommand('g-reader.startAutoScroll');
@@ -207,7 +207,7 @@ export function activate(context: vscode.ExtensionContext) {
 			autoScrollInterval = Math.max(100, autoScrollInterval - 100);
 			context.globalState.update('autoScrollInterval', autoScrollInterval);
 			vscode.window.showInformationMessage(`自动滚动间隔已减少至 ${autoScrollInterval}ms`);
-			
+
 			// If timer is running, restart it with new interval
 			if (autoScrollTimer) {
 				vscode.commands.executeCommand('g-reader.startAutoScroll');
@@ -220,16 +220,16 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(GReadProvider.viewType, provider)
 	);
-	
+
 	// Initial update
 	provider.updateList();
-	
+
 	// Update status bar on activation
 	updateStatusBar(context, statusBarItem, bookResource, textCount);
 }
 
 // Must export deactivate function
-export function deactivate() { 
+export function deactivate() {
 	// Clear timer when extension is deactivated
 	if (autoScrollTimer) {
 		clearInterval(autoScrollTimer);
@@ -246,7 +246,7 @@ class GReadProvider implements vscode.WebviewViewProvider {
 	private _cachedUpdate: any = null;
 
 	constructor(
-		private context: vscode.ExtensionContext, 
+		private context: vscode.ExtensionContext,
 		private statusBarItem: vscode.StatusBarItem,
 		private bookResource: string
 	) {
@@ -289,9 +289,12 @@ class GReadProvider implements vscode.WebviewViewProvider {
 				case 'choose':
 					this.chooseFile(message.value);
 					break;
+				case 'refresh':
+					this.updateList();
+					break;
 			}
 		});
-		
+
 		// Handle view visibility changes
 		webviewView.onDidChangeVisibility(() => {
 			if (webviewView.visible) {
@@ -333,8 +336,8 @@ class GReadProvider implements vscode.WebviewViewProvider {
 				delete bookMemory[bookName];
 				await this.context.globalState.update('bookMemory', JSON.stringify(bookMemory));
 			}
-			
-			updateStatusBar(this.context, this.statusBarItem, this.bookResource, 
+
+			updateStatusBar(this.context, this.statusBarItem, this.bookResource,
 				vscode.workspace.getConfiguration('g-reader').get<number>('textCount') as number);
 			this.updateList();
 		} catch (error) {
@@ -364,7 +367,11 @@ class GReadProvider implements vscode.WebviewViewProvider {
                 <title>Book Reader</title>
             </head>
             <body>
-                <h1>书籍列表</h1>
+				<div class="flex-row-between">
+					<h1>书籍列表</h1>
+					<svg id="refresh" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Material Symbols Light by Google - https://github.com/google/material-design-icons/blob/master/LICENSE --><path fill="currentColor" d="M3.5 12q0-3.616 2.664-6.058T12.5 3.5v-.692q0-.242.217-.354t.43.03l2.163 1.62q.323.242.323.646t-.323.646l-2.164 1.62q-.212.142-.429.03t-.217-.354V6Q9.86 6 7.93 7.718T6 12q0 .883.247 1.713t.73 1.556q.217.323.167.69t-.348.583l-.407.298q-.373.293-.818.227t-.711-.444q-.668-1.017-1.014-2.2Q3.5 13.241 3.5 12m8 8.5v.692q0 .243-.217.354q-.217.112-.43-.03l-2.162-1.62q-.324-.242-.324-.646t.323-.646l2.164-1.62q.212-.142.429-.03t.217.354V18q2.64 0 4.57-1.718T18 12q0-.883-.247-1.722q-.247-.84-.73-1.566q-.217-.323-.167-.69t.348-.583l.407-.298q.373-.293.818-.225t.712.442q.661 1.036 1.01 2.21T20.5 12q0 3.616-2.664 6.058T11.5 20.5"/></svg>
+				</div>
+                
 				<ul id="bookList">
 				  
 				</ul>
@@ -375,8 +382,8 @@ class GReadProvider implements vscode.WebviewViewProvider {
 }
 
 function updateStatusBar(
-	context: vscode.ExtensionContext, 
-	statusBarItem: vscode.StatusBarItem, 
+	context: vscode.ExtensionContext,
+	statusBarItem: vscode.StatusBarItem,
 	bookResource: string,
 	textCount: number
 ) {
@@ -392,7 +399,7 @@ function updateStatusBar(
 		const targetFiles = files
 			.filter(file => path.extname(file).toLowerCase() === '.txt')
 			.map(file => ({ name: file, pathUrl: path.join(bookResource, file) }));
-		
+
 		const currentBookFile = targetFiles.find(file => file.name === currentBook);
 		if (!currentBookFile) {
 			statusBarItem.text = '书籍不存在';
@@ -405,7 +412,7 @@ function updateStatusBar(
 
 		// Read the file as UTF-8 text
 		const content = fs.readFileSync(currentBookFile.pathUrl, 'utf-8');
-		
+
 		// Extract the text segment
 		let text = '';
 		if (position < content.length) {
@@ -423,7 +430,7 @@ function updateStatusBar(
 				text = '----------';
 			}
 		}
-		
+
 		statusBarItem.text = text;
 	} catch (error) {
 		statusBarItem.text = '读取书籍出错';

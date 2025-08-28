@@ -27,7 +27,8 @@ li:hover {
   background-color: #f5f5f5;
 }
 
-li.empty, li.error {
+li.empty,
+li.error {
   cursor: default;
   color: #666;
   font-style: italic;
@@ -35,4 +36,14 @@ li.empty, li.error {
 
 li.error {
   color: #d9534f;
+}
+
+.flex-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#refresh {
+  cursor: pointer;
 }
