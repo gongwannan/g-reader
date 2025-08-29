@@ -205,7 +205,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('g-reader.toogleHideBook', () => {
 			if (statusBarItem.text === 'Hello World!') {
-				vscode.commands.executeCommand('g-reader.startAutoScroll')
+				vscode.commands.executeCommand('g-reader.startAutoScroll');
 			} else {
 				if (autoScrollTimer) {
 					clearInterval(autoScrollTimer);
@@ -240,7 +240,7 @@ export function activate(context: vscode.ExtensionContext) {
 	provider.updateList();
 
 	// Update status bar on activation
-	statusBarItem.text = 'Hello World!'
+	statusBarItem.text = 'Hello World!';
 	// updateStatusBar(context, statusBarItem, bookResource, textCount);
 }
 
