@@ -76,7 +76,7 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "g-reader.decreaseScrollInterval",
+        "command": "g-reader.toogleHideBook",
         "key": "ctrl+backspace",
         "when": "editorTextFocus"
       }
