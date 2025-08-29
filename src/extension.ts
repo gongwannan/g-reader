@@ -201,6 +201,17 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
+	// Register command to increase auto-scroll interval
+	context.subscriptions.push(
+		vscode.commands.registerCommand('g-reader.hideBook', () => {
+			if (autoScrollTimer) {
+				clearInterval(autoScrollTimer);
+				autoScrollTimer = null;
+			}
+			statusBarItem.text = 'Hello World!';
+		})
+	);
+
 	// Register command to decrease auto-scroll interval
 	context.subscriptions.push(
 		vscode.commands.registerCommand('g-reader.decreaseScrollInterval', () => {

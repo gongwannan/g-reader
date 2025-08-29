@@ -36,6 +36,10 @@
         "title": "g-reader:Previous page"
       },
       {
+        "command": "g-reader.hideBook",
+        "title": "g-reader:Hide book"
+      },
+      {
         "command": "g-reader.next",
         "title": "g-reader:Next page"
       },
@@ -69,6 +73,11 @@
       {
         "command": "g-reader.decreaseScrollInterval",
         "key": "alt+shift+[",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "g-reader.decreaseScrollInterval",
+        "key": "ctrl+backspace",
         "when": "editorTextFocus"
       }
     ],
